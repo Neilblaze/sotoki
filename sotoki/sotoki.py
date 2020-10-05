@@ -40,6 +40,7 @@ import pathlib
 import tempfile
 import datetime
 import subprocess
+import logging
 from hashlib import sha256
 from string import punctuation
 from docopt import docopt, DocoptExit
@@ -64,6 +65,7 @@ from pif import get_public_ip
 from zimscraperlib.download import save_large_file
 from zimscraperlib.zim import make_zim_file
 from zimscraperlib.filesystem import get_file_mimetype
+from zimscraperlib.logging import getLogger
 
 ROOT_DIR = pathlib.Path(__file__).parent
 NAME = ROOT_DIR.name
@@ -80,6 +82,8 @@ CACHE_STORAGE_URL = None
 
 redirect_file = None
 output_dir = None
+
+logger = getLogger("sotoki", level=logging.DEBUG)
 
 
 #########################
@@ -1553,6 +1557,7 @@ def create_zim(
         )
 
     try:
+        logger.debug("make_zim_file()")
         make_zim_file(
             build_dir=pathlib.Path(output_dir),
             fpath=pathlib.Path(zim_path),
@@ -1603,6 +1608,8 @@ def create_zim(
 
 def run():
     scraper_version = SCRAPER
+    logger.info(f"Running {SCRAPER}")
+
     try:
         arguments = docopt(__doc__, version=scraper_version)
     except DocoptExit:
